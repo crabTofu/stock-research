@@ -1,29 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   AreaSeries, CandlestickSeries, ColorType, createChart, HistogramSeries, LineSeries, PriceScaleMode,
   type IChartApi, type UTCTimestamp,
 } from "lightweight-charts";
 import type { PriceData } from "../lib/api";
+import { useTheme } from "../lib/theme";
 
 const css = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const ts = (d: string) => (Date.parse(d + "T00:00:00Z") / 1000) as UTCTimestamp;
-
-function useColorScheme() {
-  const [dark, setDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const f = () => setDark(mq.matches);
-    mq.addEventListener("change", f);
-    return () => mq.removeEventListener("change", f);
-  }, []);
-  return dark;
-}
 
 /** TradingView lightweight-charts: canvas rendering, smooth with 10y of daily bars. */
 export function PriceChart({ data, mode, height = 360 }: { data: PriceData; mode: "area" | "candles" | "compare"; height?: number }) {
   const el = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
-  const dark = useColorScheme();
+  const theme = useTheme(); // colours are read from CSS vars, so redraw when it flips
 
   useEffect(() => {
     if (!el.current) return;
@@ -64,7 +54,7 @@ export function PriceChart({ data, mode, height = 360 }: { data: PriceData; mode
     }
     chart.timeScale().fitContent();
     return () => { chart.remove(); chartRef.current = null; };
-  }, [data, mode, height, dark]);
+  }, [data, mode, height, theme]);
 
   return <div ref={el} style={{ height, width: "100%" }} />;
 }

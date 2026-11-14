@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { refresh, useSector, useSectors, useStatus } from "./lib/api";
+import { setTheme, useTheme } from "./lib/theme";
 import { SupplyChain } from "./views/SupplyChain";
 import { Company } from "./views/Company";
 import { Research } from "./views/Research";
@@ -56,6 +57,7 @@ export default function App() {
         <div className="grow" />
         <Search sectorId={sectorId} onPick={open} />
         <DataStatus />
+        <ThemeToggle />
       </header>
       <main className="main">
         {route.view === "chain" && <SupplyChain sectorId={sectorId} onOpen={open} />}
@@ -108,6 +110,16 @@ function Search({ sectorId, onPick }: { sectorId: string; onPick: (t: string) =>
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function ThemeToggle() {
+  const theme = useTheme();
+  return (
+    <div className="seg" role="group" aria-label="Colour theme">
+      <button aria-pressed={theme === "light"} onClick={() => setTheme("light")} title="Light mode" aria-label="Light mode" style={{ fontSize: 14 }}>☀︎</button>
+      <button aria-pressed={theme === "dark"} onClick={() => setTheme("dark")} title="Dark mode" aria-label="Dark mode" style={{ fontSize: 14 }}>☾</button>
     </div>
   );
 }
