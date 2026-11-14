@@ -1,0 +1,116 @@
+# AI supply chain — upstream (left) to downstream (right).
+#
+# To add a sector, drop another YAML file in this folder with the same shape.
+# A ticker may appear in several sectors; its market data is stored only once.
+#
+# Edges are illustrative supplier -> customer relationships based on public
+# disclosures and reporting. They are meant as a starting point: edit freely.
+
+id: ai
+name: Artificial Intelligence
+description: >
+  From the lithography tools that print the chips to the apps that sell the
+  intelligence. Each column is a stage of the value chain.
+benchmarks: [SPY, QQQ, SMH]
+default_benchmark: QQQ
+
+tiers:
+  - id: equipment
+    name: Semicap & EDA
+    description: Lithography, deposition, etch, inspection and chip-design software.
+    tickers: [ASML, AMAT, LRCX, KLAC, SNPS, CDNS]
+
+  - id: foundry
+    name: Foundry & Packaging
+    description: Manufacture and package the wafers.
+    tickers: [TSM, INTC, AMKR]
+
+  - id: compute
+    name: Compute Silicon
+    description: GPUs, custom accelerators (ASICs) and CPU IP.
+    tickers: [NVDA, AMD, AVGO, MRVL, ARM]
+
+  - id: memory
+    name: Memory & Storage
+    description: HBM, DRAM, NAND and hard drives that feed the accelerators.
+    tickers: [MU, WDC, STX]
+
+  - id: networking
+    name: Networking & Optics
+    description: Switches, optical transceivers and high-speed interconnect.
+    tickers: [ANET, COHR, CIEN, CRDO, ALAB]
+
+  - id: infra
+    name: Servers, Power & Cooling
+    description: AI servers, thermal management, electrical gear and generation.
+    tickers: [SMCI, DELL, VRT, ETN, GEV, CEG]
+
+  - id: cloud
+    name: Cloud & Hyperscalers
+    description: Rent out the compute and train frontier models.
+    tickers: [MSFT, AMZN, GOOGL, META, ORCL, CRWV]
+
+  - id: software
+    name: AI Software & Apps
+    description: Data platforms and applications monetising AI.
+    tickers: [PLTR, NOW, SNOW, CRM]
+
+edges:
+  # equipment -> foundry / memory
+  - [ASML, TSM]
+  - [ASML, INTC]
+  - [ASML, MU]
+  - [AMAT, TSM]
+  - [AMAT, INTC]
+  - [LRCX, TSM]
+  - [LRCX, MU]
+  - [KLAC, TSM]
+  - [SNPS, NVDA]
+  - [SNPS, AMD]
+  - [CDNS, NVDA]
+  - [CDNS, AVGO]
+  # foundry -> chip designers
+  - [TSM, NVDA]
+  - [TSM, AMD]
+  - [TSM, AVGO]
+  - [TSM, MRVL]
+  - [TSM, ALAB]
+  - [AMKR, NVDA]
+  - [ARM, NVDA]
+  # memory -> accelerators / servers
+  - [MU, NVDA]
+  - [MU, AMD]
+  - [WDC, MSFT]
+  - [STX, AMZN]
+  # compute -> servers / clouds
+  - [NVDA, SMCI]
+  - [NVDA, DELL]
+  - [NVDA, MSFT]
+  - [NVDA, META]
+  - [NVDA, ORCL]
+  - [NVDA, CRWV]
+  - [AMD, MSFT]
+  - [AMD, META]
+  - [AVGO, GOOGL]
+  - [AVGO, META]
+  - [MRVL, AMZN]
+  # networking -> clouds
+  - [ANET, MSFT]
+  - [ANET, META]
+  - [COHR, NVDA]
+  - [CIEN, GOOGL]
+  - [CRDO, AMZN]
+  - [ALAB, AMZN]
+  # infra -> clouds
+  - [SMCI, CRWV]
+  - [DELL, CRWV]
+  - [VRT, MSFT]
+  - [ETN, MSFT]
+  - [GEV, MSFT]
+  - [CEG, MSFT]
+  # clouds -> software
+  - [MSFT, NOW]
+  - [AMZN, SNOW]
+  - [AMZN, PLTR]
+  - [ORCL, PLTR]
+  - [GOOGL, CRM]
